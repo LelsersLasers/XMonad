@@ -1,0 +1,32 @@
+Config { font= "xft: Monospace:pixelsize=12"
+       , additionalFonts = []
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [
+                      Run Cpu [""] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a, %B %d, %H:%M" "date" 10
+                    -- , Run Com "/home/millankumar/.config/xmobar/barScripts/battery" [] "battery" 10
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/volume" [] "volume" 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "}{ %cpu% | %memory% | %swap% | Vol: %volume% | %date% "
+       }
+
+
+
