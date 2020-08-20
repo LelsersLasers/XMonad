@@ -19,14 +19,14 @@ Config { font= "xft: Monospace:pixelsize=12"
                       Run Cpu [""] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
-                    , Run Date "%a, %B %d, %H:%M" "date" 10
                     -- , Run Com "/home/millankumar/.config/xmobar/barScripts/battery" [] "battery" 10
-                    , Run Com "/home/millankumar/.config/xmobar/barScripts/volume" [] "volume" 10
-                    , Run Com "/home/millankumar/.config/xmobar/barScripts/clock" [] "clock" 10
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/volume" [] "volume"      10
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/clock"  [] "clock"       10
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/cpu"    [] "cpuu"        10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "}{ %cpu% | %memory% | %swap% | Vol: %volume% | %clock% "
+       , template = "}{ Cpu: %cpuu% | %cpu% | %memory% | %swap% | Vol: %volume% | %clock% "
        }
 
 
