@@ -22,10 +22,11 @@ Config { font= "xft: Monospace:pixelsize=12"
                     , Run Date "%a, %B %d, %H:%M" "date" 10
                     -- , Run Com "/home/millankumar/.config/xmobar/barScripts/battery" [] "battery" 10
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/volume" [] "volume" 10
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/clock" [] "clock" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "}{ %cpu% | %memory% | %swap% | Vol: %volume% | %date% "
+       , template = "}{ %cpu% | %memory% | %swap% | Vol: %volume% | %clock% "
        }
 
 
