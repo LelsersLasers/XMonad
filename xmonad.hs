@@ -177,11 +177,12 @@ ratio   = 1/2
 delta   = 4/100
 
 -- LAYOUTS
-tiled = renamed [Replace "tall"] $ mySpacing 12 $ ResizableTall nmaster delta ratio []
+
+tiled = renamed [Replace "tall"] 
+      $ mySpacing 8
+      $ ResizableTall nmaster delta ratio []
 
 
-
---myLayout = spacingRaw True (Border myGap myGap myGap myGap) True (Border myGap myGap myGap myGap) True $ tiled ||| simpleFloat ||| Full
 myLayout = tiled ||| simpleFloat ||| Full
   
 ------------------------------------------------------------------------
@@ -234,6 +235,7 @@ myLogHook = return ()
 myStartupHook = do
   spawnOnce "nitrogen --restore"
   spawnOnce "picom &"
+  spawnOnce "/usr/lib/polkit-kde-authentication-agent-1 &"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
