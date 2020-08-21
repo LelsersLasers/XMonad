@@ -7,19 +7,18 @@ import XMonad
 import Data.Monoid
 import System.Exit
 
-import XMonad.Hooks.ManageDocks
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 
-import XMonad.Layout.Gaps
+import XMonad.Layout.SimpleFloat
+import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.Renamed (renamed, Rename(Replace))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
+-- basic preferences
 myTerminal      = "termite"
 
 -- Whether focus follows the mouse pointer.
@@ -31,35 +30,21 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
 -- Width of the window border in pixels.
---
-myBorderWidth   = 4
+myBorderWidth   = 2
 
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
+-- the mod key (alt = mod1Mask)
 myModMask       = mod1Mask
 
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
 -- A tagging example:
---
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
---
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#005577"
 
 ------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
---
+-- KEY BINDINGS
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
@@ -115,9 +100,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_i), sendMessage MirrorShrink)
     , ((modm,               xK_o), sendMessage MirrorExpand)
     
-    -- Toggle bar gap
-    , ((modm .|. shiftMask,               xK_b), sendMessage ToggleStruts)
-
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
@@ -130,7 +112,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
-    --
     -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Quit xmonad
@@ -165,7 +146,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
---
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -183,30 +163,27 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
 
 ------------------------------------------------------------------------
--- Layouts:
+-- layout vars
 
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.
-myLayout = gaps [(L,10), (R,10), (U,29), (D,10)] $ avoidStruts (tiled ||| Full) 
-  where
-     -- gaps
-     -- gaps [(U,18), (R,23)] $ Tall 1 (3/100) (1/2)
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = ResizableTall nmaster delta ratio []
+myGap = 8
+myTopGap = myGap + 19
 
-     -- The default number of windows in the master pane
-     nmaster = 1
+mySpacing i = spacingRaw True (Border (i+19) i i i) True (Border i i i i) True
+-- The default number of windows in the master pane
+nmaster = 1
+-- Default proportion of screen occupied by master pane
+ratio   = 1/2
+-- Percent of screen to increment by when resizing panes
+delta   = 4/100
 
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
+-- LAYOUTS
+tiled = renamed [Replace "tall"] $ mySpacing 12 $ ResizableTall nmaster delta ratio []
 
-     -- Percent of screen to increment by when resizing panes
-     delta   = 4/100
 
+
+--myLayout = spacingRaw True (Border myGap myGap myGap myGap) True (Border myGap myGap myGap myGap) True $ tiled ||| simpleFloat ||| Full
+myLayout = tiled ||| simpleFloat ||| Full
+  
 ------------------------------------------------------------------------
 -- Window rules:
 
@@ -265,7 +242,7 @@ myStartupHook = do
 
 main = do 
   xmproc <- spawnPipe "xmobar /home/millankumar/.config/xmobar/xmobarrc"
-  xmonad $ docks defaults
+  xmonad defaults
 
 
 -- A structure containing your configuration settings, overriding
