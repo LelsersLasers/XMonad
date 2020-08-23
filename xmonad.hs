@@ -168,9 +168,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ------------------------------------------------------------------------
 -- layout vars
 
-myGap = 8
-
-mySpacing i = spacingRaw True (Border i i i i) True (Border i i i i) True
+-- mySpacing i = spacingRaw True (Border i i i i) True (Border i i i i) True
+mySpacing i = spacing i
 -- The default number of windows in the master pane
 nmaster = 1
 -- Default proportion of screen occupied by master pane
@@ -180,16 +179,16 @@ delta   = 4/100
 
 -- LAYOUTS
 
-tiled = renamed [Replace "tile"] 
-      $ mySpacing 8
-      $ ResizableTall nmaster delta ratio []
+tiled   = renamed [Replace "tile"] 
+        $ mySpacing 16
+        $ ResizableTall nmaster delta ratio []
 
-monocle  = renamed [Replace "monocle"]
-         $ mySpacing 8 
-         $ Full
+monocle = renamed [Replace "monocle"]
+        $ mySpacing 16
+        $ Full
 
 
-myLayout = avoidStruts (tiled ||| simpleFloat ||| Full ||| monocle)
+myLayout = avoidStruts (tiled ||| simpleFloat ||| monocle ||| Full)
   
 ------------------------------------------------------------------------
 -- Window rules:
