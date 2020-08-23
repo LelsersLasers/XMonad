@@ -6,6 +6,7 @@
 import XMonad
 import Data.Monoid
 import System.Exit
+import Data.List
 
 import XMonad.Actions.NoBorders
 
@@ -17,6 +18,11 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
 
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.WorkspaceHistory
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 
 import qualified XMonad.StackSet as W
@@ -168,7 +174,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ------------------------------------------------------------------------
 -- layout vars
 
--- mySpacing i = spacingRaw True (Border i i i i) True (Border i i i i) True
+mySpacingRaw i = spacingRaw True (Border i i i i) True (Border i i i i) True
 mySpacing i = spacing i
 -- The default number of windows in the master pane
 nmaster = 1
@@ -180,7 +186,7 @@ delta   = 4/100
 -- LAYOUTS
 
 tiled   = renamed [Replace "tile"] 
-        $ mySpacing 16
+        $ mySpacingRaw 8
         $ ResizableTall nmaster delta ratio []
 
 monocle = renamed [Replace "monocle"]
@@ -224,11 +230,10 @@ myEventHook = mempty
 
 ------------------------------------------------------------------------
 -- Status bars and logging
+myLogHook dest = dynamicLogWithPP defaultPP { ppOutput = hPutStrLn dest
+                                            ,ppVisible = wrap "(" ")"
+					    }
 
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-myLogHook = return ()
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -243,13 +248,18 @@ myStartupHook = do
   spawnOnce "/usr/lib/polkit-kde-authentication-agent-1 &"
 
 ------------------------------------------------------------------------
+
+myXmobarBar = "xmobar /home/millankumar/.config/xmobar/xmobarrc"
+
+colorGrayAlt = "#333333"
+
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
 
 main = do 
   xmproc <- spawnPipe "xmobar /home/millankumar/.config/xmobar/xmobarrc"
-  xmonad $ docks defaults
+  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ defaults xmproc
 
 
 -- A structure containing your configuration settings, overriding
@@ -258,7 +268,7 @@ main = do
 --
 -- No need to modify this.
 
-defaults = def {
+defaults xmproc = def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -277,7 +287,9 @@ defaults = def {
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+       
+        logHook            = myLogHook xmproc,
+       
         startupHook        = myStartupHook
     }
 

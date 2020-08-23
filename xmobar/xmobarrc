@@ -17,15 +17,18 @@ Config { font= "xft: Monospace:pixelsize=12"
        , overrideRedirect = True
        , commands = [
                     -- , Run Com "/home/millankumar/.config/xmobar/barScripts/battery" [] "battery" 10
+                    -- Run StdinReader
                       Run Com "/home/millankumar/.config/xmobar/barScripts/volume" [] "volume"      10
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/clock"  [] "clock"       10
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/cpu"    [] "cpuu"        10
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/memory" [] "mem"         10 
-                    , Run Com "/home/millankumar/.config/xmobar/barScripts/swap" [] "swa"         10 
+                    , Run Com "/home/millankumar/.config/xmobar/barScripts/swap"   [] "swa"         10 
+                    , Run StdinReader
+                    , Run UnsafeStdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "}{ Cpu: %cpuu% | Mem: %mem% | Swap: %swa% | Vol: %volume% | %clock% "
+       , template = " %StdinReader% }{ Cpu: %cpuu% | Mem: %mem% | Swap: %swa% | Vol: %volume% | %clock% "
        }
 
 
