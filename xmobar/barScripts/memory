@@ -1,4 +1,15 @@
 #!/bin/bash
 
-mem="$(free -h | awk '/^Mem/ { print $3\"/\"$2 } ' | sed s/i//g)"
-echo -e "$mem"
+line="$(free -h | grep Mem)"
+echo "$line" > memoryTemp
+read title total used a b c d < memoryTemp
+
+line="$(free | grep Mem)"
+echo "$line" > memoryTemp
+read title totalB usedB a b c d < memoryTemp
+
+usedB=$((100 * usedB))
+
+percent="$(echo $usedB / $totalB | bc -l | cut -c -2)"
+
+echo -e "$used/$total ($percent%)"

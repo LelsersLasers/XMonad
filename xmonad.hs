@@ -7,6 +7,8 @@ import XMonad
 import Data.Monoid
 import System.Exit
 
+import XMonad.Actions.NoBorders
+
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 
@@ -14,6 +16,8 @@ import XMonad.Layout.SimpleFloat
 import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
+
+import XMonad.Hooks.ManageDocks
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -110,19 +114,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    
+    -- Toggle the Borders on windows
+    , ((modm              , xK_g ),   withFocused toggleBorder)
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_x     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
     -- , ((modm .|. shiftMask, xK_g     ), spawn "xmonad --recompile; killall xmobar; xmonad --restart")
-    , ((modm .|. shiftMask, xK_g     ), sequence_ [spawn "xmonad --recompile; killall xmobar; xmonad --restart", setLayout $ XMonad.layoutHook conf])
+    , ((modm .|. shiftMask, xK_g     ), spawn "xmonad --recompile; killall xmobar; xmonad --restart")
  
-    -- Run xmessage with a summary of the default keybindings (useful for beginners)
-    -- , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
     ]
     ++
 
@@ -166,9 +169,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- layout vars
 
 myGap = 8
-myTopGap = myGap + 19
 
-mySpacing i = spacingRaw True (Border (i+19) i i i) True (Border i i i i) True
+mySpacing i = spacingRaw True (Border i i i i) True (Border i i i i) True
 -- The default number of windows in the master pane
 nmaster = 1
 -- Default proportion of screen occupied by master pane
@@ -178,12 +180,16 @@ delta   = 4/100
 
 -- LAYOUTS
 
-tiled = renamed [Replace "tall"] 
+tiled = renamed [Replace "tile"] 
       $ mySpacing 8
       $ ResizableTall nmaster delta ratio []
 
+monocle  = renamed [Replace "monocle"]
+         $ mySpacing 8 
+         $ Full
 
-myLayout = tiled ||| simpleFloat ||| Full
+
+myLayout = avoidStruts (tiled ||| simpleFloat ||| Full ||| monocle)
   
 ------------------------------------------------------------------------
 -- Window rules:
@@ -244,7 +250,7 @@ myStartupHook = do
 
 main = do 
   xmproc <- spawnPipe "xmobar /home/millankumar/.config/xmobar/xmobarrc"
-  xmonad defaults
+  xmonad $ docks defaults
 
 
 -- A structure containing your configuration settings, overriding

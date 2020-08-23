@@ -1,0 +1,16 @@
+#!/bin/bash
+
+line="$(free -h | grep Swap)"
+echo "$line" > swapTemp
+read title total used a b c d < swapTemp
+
+line="$(free | grep Swap)"
+echo "$line" > swapTemp
+read title totalB usedB a b c d < swapTemp
+
+usedB=$((100 * usedB))
+
+percent="$(echo $usedB / $totalB | bc -l | cut -c -2)"
+
+echo -e "$used/$total ($percent%)"
+
