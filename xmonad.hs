@@ -40,7 +40,7 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
 -- Width of the window border in pixels.
-myBorderWidth   = 2
+myBorderWidth   = 3
 
 -- the mod key (alt = mod1Mask)
 myModMask       = mod1Mask
@@ -129,7 +129,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_x     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    -- , ((modm .|. shiftMask, xK_g     ), spawn "xmonad --recompile; killall xmobar; xmonad --restart")
     , ((modm .|. shiftMask, xK_g     ), spawn "xmonad --recompile; killall xmobar; xmonad --restart")
  
     ]
@@ -230,9 +229,18 @@ myEventHook = mempty
 
 ------------------------------------------------------------------------
 -- Status bars and logging
-myLogHook dest = dynamicLogWithPP defaultPP { ppOutput = hPutStrLn dest
-                                            ,ppVisible = wrap "(" ")"
-					    }
+myLogHook dest = dynamicLogWithPP defaultPP 
+    { ppOutput = hPutStrLn dest
+    -- , ppVisible = wrap "(" ")"
+    , ppCurrent = xmobarColor "#c3e88d" "" . wrap "[" "]" -- Current workspace in xmobar
+    , ppVisible = xmobarColor "#c3e88d" ""                -- Visible but not current workspace
+    , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" ""   -- Hidden workspaces in xmobar
+    , ppHiddenNoWindows = xmobarColor "#c792ea" ""        -- Hidden workspaces (no windows)
+    , ppTitle = xmobarColor "#b3afc2" "" . shorten 120     -- Title of active window in xmobar
+    , ppSep =  " : "                                      -- Separators in xmobar
+    , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"
+
+    }
 
 
 ------------------------------------------------------------------------

@@ -24,7 +24,7 @@ Config { font= "xft: Monospace:pixelsize=12"
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/memory" [] "mem"         10 
                     , Run Com "/home/millankumar/.config/xmobar/barScripts/swap"   [] "swa"         10 
                     , Run StdinReader
-                    , Run UnsafeStdinReader
+                    -- , Run UnsafeStdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
