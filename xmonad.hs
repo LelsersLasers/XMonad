@@ -16,8 +16,10 @@ import XMonad.Util.Run
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
 
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.WorkspaceHistory
 import XMonad.Hooks.DynamicLog
@@ -50,8 +52,8 @@ myModMask       = mod1Mask
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#005577"
+myNormalBorderColor  = "#E5E9F0"
+myFocusedBorderColor = "#88C0D0"
 
 ------------------------------------------------------------------------
 -- KEY BINDINGS
@@ -184,16 +186,22 @@ delta   = 4/100
 
 -- LAYOUTS
 
-tiled   = renamed [Replace "tile"] 
-        $ mySpacingRaw 8
-        $ ResizableTall nmaster delta ratio []
+tilez    = renamed [Replace "tile"] 
+         $ mySpacingRaw 8
+         $ ResizableTall nmaster delta ratio []
 
-monocle = renamed [Replace "monocle"]
-        $ mySpacing 16
-        $ Full
+floating = renamed [Replace "floating"]
+         $ simpleFloat 
+
+monocle  = renamed [Replace "monocle"]
+         $ mySpacing 16
+         $ Full
+
+full     = renamed [Replace "full"]
+         $ noBorders Full
 
 
-myLayout = avoidStruts (tiled ||| simpleFloat ||| monocle ||| Full)
+myLayout = avoidStruts (tilez ||| floating ||| monocle ||| full)
   
 ------------------------------------------------------------------------
 -- Window rules:
@@ -232,13 +240,13 @@ myEventHook = mempty
 myLogHook dest = dynamicLogWithPP defaultPP 
     { ppOutput = hPutStrLn dest
     -- , ppVisible = wrap "(" ")"
-    , ppCurrent = xmobarColor "#c3e88d" "" . wrap "[" "]" -- Current workspace in xmobar
-    , ppVisible = xmobarColor "#c3e88d" ""                -- Visible but not current workspace
-    , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" ""   -- Hidden workspaces in xmobar
-    , ppHiddenNoWindows = xmobarColor "#c792ea" ""        -- Hidden workspaces (no windows)
-    , ppTitle = xmobarColor "#b3afc2" "" . shorten 120     -- Title of active window in xmobar
+    , ppCurrent = xmobarColor "#EBCB8B" "" . wrap "[" "]" -- Current workspace in xmobar
+    , ppVisible = xmobarColor "#BF616A" ""                -- Visible but not current workspace
+    , ppHidden = xmobarColor "#A3BE8C" "" . wrap "(" ")"   -- Hidden workspaces in xmobar
+    , ppHiddenNoWindows = xmobarColor "#5E81AC" ""        -- Hidden workspaces (no windows)
+    , ppTitle = xmobarColor "#D8DEE9" "" . shorten 120     -- Title of active window in xmobar
     , ppSep =  " : "                                      -- Separators in xmobar
-    , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"
+    , ppUrgent = xmobarColor "#BF616A" "" . wrap "!" "!"
 
     }
 
@@ -293,7 +301,7 @@ defaults xmproc = def {
 
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = myManageHook,
+        manageHook         = insertPosition Below Newer <+> myManageHook,
         handleEventHook    = myEventHook,
        
         logHook            = myLogHook xmproc,

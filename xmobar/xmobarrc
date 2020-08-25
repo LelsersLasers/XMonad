@@ -1,9 +1,9 @@
 Config { font= "xft: Monospace:pixelsize=12"
        , additionalFonts = []
-       , borderColor = "black"
-       , border = TopB
-       , bgColor = "black"
-       , fgColor = "grey"
+       , borderColor = "#4C566A"
+       -- , border = BottomB
+       , bgColor = "#2E3440"
+       , fgColor = "#E5E9F0"
        , alpha = 255
        , position = Top
        , textOffset = -1
@@ -28,7 +28,7 @@ Config { font= "xft: Monospace:pixelsize=12"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% }{ Cpu: %cpuu% | Mem: %mem% | Swap: %swa% | Vol: %volume% | %clock% "
+       , template = " %StdinReader% }{ <fc=#EBCB8B> Cpu: %cpuu% </fc>| <fc=#A3BE8C>Mem: %mem%</fc> | <fc=#88C0D0>Swap: %swa%</fc> | <fc=#5E81AC>Vol: %volume%</fc> | <fc=#B48EAD>%clock%</fc> "
        }
 
 
