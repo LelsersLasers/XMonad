@@ -19,6 +19,8 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
 
+import XMonad.Hooks.EwmhDesktops
+
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.WorkspaceHistory
@@ -187,7 +189,7 @@ delta   = 4/100
 -- LAYOUTS
 
 tilez    = renamed [Replace "tile"] 
-         $ mySpacingRaw 8
+         $ mySpacingRaw 20
          $ ResizableTall nmaster delta ratio []
 
 floating = renamed [Replace "floating"]
@@ -202,7 +204,12 @@ full     = renamed [Replace "full"]
 
 
 myLayout = avoidStruts (tilez ||| floating ||| monocle ||| full)
-  
+
+
+-- ewmhDesktopsStartup :: X ()
+-- ewmhDesktopsLogHook :: X ()
+
+ 
 ------------------------------------------------------------------------
 -- Window rules:
 
