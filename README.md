@@ -1,5 +1,15 @@
 # XMonad
-My personal XMonad (and xmobar) config.
+My personal XMonad (and xmobar and picom) config(s).
+
+NOTES: 
+
+run picom with 'picom --round-borders 1' not just 'picom'
+
+the picom is this fork (https://github.com/ibhagwan/picom)
+
+to install this picom on arch:
+$ git clone https://github.com/ibhagwan/picom-ibhagwan-git
+$ makepkg -si
 
 Need to do: 
  have gaps in tiled mode even with 1 window
