@@ -175,6 +175,13 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
 
 ------------------------------------------------------------------------
+
+-- window count
+
+windowCount :: X (Maybe String)
+windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+
+--------------------------------------------------------------------------
 -- layout vars
 
 mySpacingRaw i = spacingRaw True (Border i i i i) True (Border i i i i) True
@@ -251,10 +258,11 @@ myLogHook dest = dynamicLogWithPP defaultPP
     , ppVisible = xmobarColor "#BF616A" ""                -- Visible but not current workspace
     , ppHidden = xmobarColor "#A3BE8C" "" . wrap "(" ")"   -- Hidden workspaces in xmobar
     , ppHiddenNoWindows = xmobarColor "#5E81AC" ""        -- Hidden workspaces (no windows)
+    , ppExtras  = [windowCount]                         -- displays number of open window
     , ppTitle = xmobarColor "#D8DEE9" "" . shorten 120     -- Title of active window in xmobar
     , ppSep =  " : "                                      -- Separators in xmobar
     , ppUrgent = xmobarColor "#BF616A" "" . wrap "!" "!"
-
+    , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
     }
 
 
@@ -267,7 +275,7 @@ myLogHook dest = dynamicLogWithPP defaultPP
 
 myStartupHook = do
   spawnOnce "nitrogen --restore"
-  spawnOnce "picom &"
+  spawnOnce "picom --round-borders 1 &"
   spawnOnce "/usr/lib/polkit-kde-authentication-agent-1 &"
 
 ------------------------------------------------------------------------
