@@ -13,3 +13,5 @@ usedB=$((100 * usedB))
 percent="$(echo $usedB / $totalB | bc -l | cut -c -4)"
 
 echo -e "$used/$total ($percent%)"
+
+rm ~/.config/xmobar/barScripts/temp/memoryTemp
