@@ -18,11 +18,11 @@ Need to do:
 , change color of window count
 , make xmobar transparent
 , make all colors the same (like same transparence with bar and windows, chrome scheme matches bar, dmenu theme)
+, make the sound buttons work
 
 Need to decide:
  
  picom:
  round corners or shawdows?
- shawdows on bar?
  shawdows on dmenu?
  dmenu or rofi?
